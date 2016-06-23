@@ -36,6 +36,9 @@ class QuestionPanel extends React.Component {
                                       this.props.questionAnswers)) {
           return;
         }
+        
+        // Make answer available to custom validation rules.
+        validation.questionAnswer = questionAnswer;
 
         questionValidationErrors.push({
           type    : validation.type,
