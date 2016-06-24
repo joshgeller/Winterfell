@@ -4,7 +4,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
@@ -95,6 +95,11 @@ var Question = (function (_React$Component) {
 
       var labelId = this.props.questionId + '-label';
 
+      var colSize = 'col-xs-12';
+      if (this.props.classes.columnSizes && this.props.classes.columnSizes[this.props.input.type]) {
+        colSize = this.props.classes.columnSizes[this.props.input.type];
+      }
+
       return React.createElement(
         'div',
         { className: this.props.classes.question },
@@ -112,19 +117,27 @@ var Question = (function (_React$Component) {
           this.props.text
         ) : undefined,
         validationErrors,
-        React.createElement(Input, _extends({ name: this.props.questionId,
-          id: this.props.questionId,
-          labelId: labelId,
-          value: value,
-          text: this.props.input.text,
-          options: this.props.input.options,
-          placeholder: this.props.input.placeholder,
-          required: this.props.input.required,
-          classes: this.props.classes,
-          onChange: this.handleInputChange.bind(this, this.props.questionId),
-          onBlur: this.handleInputBlur.bind(this, this.props.questionId),
-          onKeyDown: this.props.onKeyDown
-        }, extraprops)),
+        React.createElement(
+          'div',
+          { className: 'row' },
+          React.createElement(
+            'div',
+            { className: colSize },
+            React.createElement(Input, _extends({ name: this.props.questionId,
+              id: this.props.questionId,
+              labelId: labelId,
+              value: value,
+              text: this.props.input.text,
+              options: this.props.input.options,
+              placeholder: this.props.input.placeholder,
+              required: this.props.input.required,
+              classes: this.props.classes,
+              onChange: this.handleInputChange.bind(this, this.props.questionId),
+              onBlur: this.handleInputBlur.bind(this, this.props.questionId),
+              onKeyDown: this.props.onKeyDown
+            }, extraprops))
+          )
+        ),
         !!this.props.postText ? React.createElement(
           'p',
           { className: this.props.classes.questionPostText },

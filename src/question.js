@@ -98,50 +98,62 @@ class Question extends React.Component {
 
     let labelId = `${this.props.questionId}-label`;
 
+    let colSize = 'col-xs-12'
+    if (
+      this.props.classes.columnSizes &&
+      this.props.classes.columnSizes[this.props.input.type]
+    ) {
+      colSize = this.props.classes.columnSizes[this.props.input.type]
+    }
+
     return (
       <div className={this.props.classes.question}>
         {!!this.props.question
           ? (
-              <label className={this.props.classes.label}
-                     id={labelId}
-                     htmlFor={this.props.questionId}>
-                {this.props.question}
-                {typeof this.props.renderRequiredAsterisk !== 'undefined'
-                   && this.props.input.required
-                   ? this.props.renderRequiredAsterisk()
-                   : undefined}
-              </label>
-            )
-          : undefined}
+            <label className={this.props.classes.label}
+              id={labelId}
+              htmlFor={this.props.questionId}>
+              {this.props.question}
+              {typeof this.props.renderRequiredAsterisk !== 'undefined'
+                && this.props.input.required
+                ? this.props.renderRequiredAsterisk()
+              : undefined}
+            </label>
+          )
+        : undefined}
         {!!this.props.text
           ? (
-              <p className={this.props.classes.questionText}>
-                {this.props.text}
-              </p>
-            )
-          : undefined}
+            <p className={this.props.classes.questionText}>
+              {this.props.text}
+            </p>
+          )
+        : undefined}
         {validationErrors}
-        <Input name={this.props.questionId}
-               id={this.props.questionId}
-               labelId={labelId}
-               value={value}
-               text={this.props.input.text}
-               options={this.props.input.options}
-               placeholder={this.props.input.placeholder}
-               required={this.props.input.required}
-               classes={this.props.classes}
-               onChange={this.handleInputChange.bind(this, this.props.questionId)}
-               onBlur={this.handleInputBlur.bind(this, this.props.questionId)}
-               onKeyDown={this.props.onKeyDown}
-               {...extraprops}
-        />
+        <div className='row'>
+          <div className={colSize}>
+            <Input name={this.props.questionId}
+              id={this.props.questionId}
+              labelId={labelId}
+              value={value}
+              text={this.props.input.text}
+              options={this.props.input.options}
+              placeholder={this.props.input.placeholder}
+              required={this.props.input.required}
+              classes={this.props.classes}
+              onChange={this.handleInputChange.bind(this, this.props.questionId)}
+              onBlur={this.handleInputBlur.bind(this, this.props.questionId)}
+              onKeyDown={this.props.onKeyDown}
+              {...extraprops}
+            />
+          </div>
+        </div>
         {!!this.props.postText
           ? (
-              <p className={this.props.classes.questionPostText}>
-                {this.props.postText}
-              </p>
-            )
-          : undefined}
+            <p className={this.props.classes.questionPostText}>
+              {this.props.postText}
+            </p>
+          )
+        : undefined}
         {conditionalItems}
       </div>
     );
