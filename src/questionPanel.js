@@ -36,7 +36,7 @@ class QuestionPanel extends React.Component {
                                       this.props.questionAnswers)) {
           return;
         }
-        
+
         // Make answer available to custom validation rules.
         validation.questionAnswer = questionAnswer;
 
@@ -55,7 +55,7 @@ class QuestionPanel extends React.Component {
     });
   }
 
-  handleMainButtonClick() {
+  validatePanel() {
     var action     = this.props.action.default;
     var conditions = this.props.action.conditions || [];
 
@@ -92,8 +92,15 @@ class QuestionPanel extends React.Component {
       this.setState({
         validationErrors : validationErrors
       });
-      return;
     }
+    return Object.keys(invalidQuestions).length === 0
+  }
+
+  handleMainButtonClick() {
+    var action     = this.props.action.default;
+    var conditions = this.props.action.conditions || [];
+
+    if (!this.validatePanel) return
 
     /*
      * Panel is valid. So what do we do next?
@@ -195,24 +202,24 @@ class QuestionPanel extends React.Component {
         {typeof this.props.panelHeader !== 'undefined'
           || typeof this.props.panelText !== 'undefined'
           ? (
-              <div className={this.props.classes.questionPanelHeaderContainer}>
-                {typeof this.props.panelHeader !== 'undefined'
-                  ? (
-                      <h3 className={this.props.classes.questionPanelHeaderText}>
-                        {this.props.panelHeader}
-                      </h3>
-                    )
-                  : undefined}
-                {typeof this.props.panelText !== 'undefined'
-                  ? (
-                      <p className={this.props.classes.questionPanelText}>
-                        {this.props.panelText}
-                      </p>
-                    )
-                  : undefined}
-              </div>
-            )
-          : undefined}
+            <div className={this.props.classes.questionPanelHeaderContainer}>
+              {typeof this.props.panelHeader !== 'undefined'
+                ? (
+                  <h3 className={this.props.classes.questionPanelHeaderText}>
+                    {this.props.panelHeader}
+                  </h3>
+                )
+              : undefined}
+              {typeof this.props.panelText !== 'undefined'
+                ? (
+                  <p className={this.props.classes.questionPanelText}>
+                    {this.props.panelText}
+                  </p>
+                )
+              : undefined}
+            </div>
+          )
+        : undefined}
         <div className={this.props.classes.questionSets}>
           {questionSets}
         </div>
@@ -220,17 +227,17 @@ class QuestionPanel extends React.Component {
           {this.props.panelHistory.length > 1
             && !this.props.backButton.disabled
             ? (
-                <Button text={this.props.backButton.text || 'Back'}
-                        onClick={this.handleBackButtonClick.bind(this)}
-                        className={this.props.classes.backButton} />
-              )
-            : undefined}
+              <Button text={this.props.backButton.text || 'Back'}
+                onClick={this.handleBackButtonClick.bind(this)}
+                className={this.props.classes.backButton} />
+            )
+          : undefined}
           {!this.props.button.disabled
             ? (
-                <Button text={this.props.button.text}
-                        onClick={this.handleMainButtonClick.bind(this)}
-                        className={this.props.classes.controlButton} />
-              )
+              <Button ref='mainButton' text={this.props.button.text}
+                onClick={this.handleMainButtonClick.bind(this)}
+                className={this.props.classes.controlButton} />
+            )
             : undefined}
         </div>
       </div>

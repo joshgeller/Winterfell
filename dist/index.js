@@ -73,6 +73,9 @@ var Winterfell = (function (_React$Component) {
   }, {
     key: 'handleSwitchPanel',
     value: function handleSwitchPanel(panelId, preventHistory) {
+
+      var updateState = true;
+
       var panel = _.find(this.props.schema.formPanels, {
         panelId: panelId
       });
@@ -81,20 +84,38 @@ var Winterfell = (function (_React$Component) {
         throw new Error('Winterfell: Tried to switch to panel "' + panelId + '", which does not exist.');
       }
 
-      if (!preventHistory) {
-        this.panelHistory.push(panel.panelId);
+      var currentPanel = _.find(this.props.schema.formPanels, {
+        panelId: this.panelHistory[this.panelHistory.length - 1]
+      });
+
+      if (currentPanel && currentPanel != panel) {
+        // If we are moving to the next panel, validate the current one
+        if (panel.index > currentPanel.index) {
+          if (this.refs.questionPanel.validatePanel() === false) {
+            // If current panel is invalid, do not update state
+            updateState = false;
+            return;
+          } else {
+            // If validation is okay, add new panel to panel history
+            this.panelHistory.push(panel.panelId);
+          }
+        } else {
+          // Going backwards
+          this.panelHistory.pop();
+        }
+      } else {
+        // Same panel, do nothing
+        return;
       }
 
       this.setState({
-        currentPanel: panel
+        currentPanel: updateState ? panel : currentPanel
       }, this.props.onSwitchPanel.bind(null, panel));
     }
   }, {
     key: 'handleBackButtonClick',
     value: function handleBackButtonClick() {
-      this.panelHistory.pop();
-
-      this.handleSwitchPanel.call(this, this.panelHistory[this.panelHistory.length - 1], true);
+      this.handleSwitchPanel.call(this, this.panelHistory[this.panelHistory.length - 2], true);
     }
   }, {
     key: 'handleSubmit',
@@ -135,7 +156,9 @@ var Winterfell = (function (_React$Component) {
         React.createElement(
           'div',
           { className: this.state.schema.classes.questionPanels },
-          React.createElement(QuestionPanel, { schema: this.state.schema,
+          React.createElement(QuestionPanel, {
+            ref: 'questionPanel',
+            schema: this.state.schema,
             classes: this.state.schema.classes,
             panelId: currentPanel.panelId,
             panelIndex: currentPanel.panelIndex,

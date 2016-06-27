@@ -66,10 +66,8 @@ var QuestionPanel = (function (_React$Component) {
       });
     }
   }, {
-    key: 'handleMainButtonClick',
-    value: function handleMainButtonClick() {
-      var _this2 = this;
-
+    key: 'validatePanel',
+    value: function validatePanel() {
       var action = this.props.action['default'];
       var conditions = this.props.action.conditions || [];
 
@@ -106,8 +104,18 @@ var QuestionPanel = (function (_React$Component) {
         this.setState({
           validationErrors: validationErrors
         });
-        return;
       }
+      return Object.keys(invalidQuestions).length === 0;
+    }
+  }, {
+    key: 'handleMainButtonClick',
+    value: function handleMainButtonClick() {
+      var _this2 = this;
+
+      var action = this.props.action['default'];
+      var conditions = this.props.action.conditions || [];
+
+      if (!this.validatePanel) return;
 
       /*
        * Panel is valid. So what do we do next?
@@ -232,7 +240,7 @@ var QuestionPanel = (function (_React$Component) {
           this.props.panelHistory.length > 1 && !this.props.backButton.disabled ? React.createElement(Button, { text: this.props.backButton.text || 'Back',
             onClick: this.handleBackButtonClick.bind(this),
             className: this.props.classes.backButton }) : undefined,
-          !this.props.button.disabled ? React.createElement(Button, { text: this.props.button.text,
+          !this.props.button.disabled ? React.createElement(Button, { ref: 'mainButton', text: this.props.button.text,
             onClick: this.handleMainButtonClick.bind(this),
             className: this.props.classes.controlButton }) : undefined
         )

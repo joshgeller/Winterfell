@@ -64,6 +64,9 @@ class Winterfell extends React.Component {
   }
 
   handleSwitchPanel(panelId, preventHistory) {
+
+    let updateState = true;
+
     var panel = _.find(this.props.schema.formPanels, {
       panelId : panelId
     });
@@ -73,20 +76,38 @@ class Winterfell extends React.Component {
                       + panelId + '", which does not exist.');
     }
 
-    if (!preventHistory) {
-      this.panelHistory.push(panel.panelId);
-    }
+    var currentPanel = _.find(this.props.schema.formPanels, {
+      panelId: this.panelHistory[this.panelHistory.length - 1]
+    });
 
-    this.setState({
-      currentPanel : panel
-    }, this.props.onSwitchPanel.bind(null, panel));
+    if (currentPanel && currentPanel != panel) {
+          // If we are moving to the next panel, validate the current one
+          if (panel.index > currentPanel.index) {
+              if (this.refs.questionPanel.validatePanel() === false) {
+                  // If current panel is invalid, do not update state
+                  updateState = false;
+                  return;
+              } else {
+                  // If validation is okay, add new panel to panel history
+                  this.panelHistory.push(panel.panelId);
+              }
+          } else {
+            // Going backwards
+            this.panelHistory.pop();
+          }
+      } else {
+          // Same panel, do nothing
+          return;
+      }
+
+      this.setState({
+        currentPanel : updateState ? panel : currentPanel
+      }, this.props.onSwitchPanel.bind(null, panel));
   }
 
   handleBackButtonClick() {
-    this.panelHistory.pop();
-
     this.handleSwitchPanel.call(
-      this, this.panelHistory[this.panelHistory.length - 1], true
+      this, this.panelHistory[this.panelHistory.length - 2], true
     );
   }
 
@@ -114,29 +135,31 @@ class Winterfell extends React.Component {
 
     return (
       <form method={this.props.method}
-            encType={this.props.encType}
-            action={this.state.action}
-            ref={this.props.ref}
-            className={this.state.schema.classes.form}>
+        encType={this.props.encType}
+        action={this.state.action}
+        ref={this.props.ref}
+        className={this.state.schema.classes.form}>
         <div className={this.state.schema.classes.questionPanels}>
-          <QuestionPanel schema={this.state.schema}
-                         classes={this.state.schema.classes}
-                         panelId={currentPanel.panelId}
-                         panelIndex={currentPanel.panelIndex}
-                         panelHeader={currentPanel.panelHeader}
-                         panelText={currentPanel.panelText}
-                         action={currentPanel.action}
-                         button={currentPanel.button}
-                         backButton={currentPanel.backButton}
-                         questionSets={currentPanel.questionSets}
-                         questionAnswers={this.state.questionAnswers}
-                         panelHistory={this.panelHistory}
-                         renderError={this.props.renderError}
-                         renderRequiredAsterisk={this.props.renderRequiredAsterisk}
-                         onAnswerChange={this.handleAnswerChange.bind(this)}
-                         onPanelBack={this.handleBackButtonClick.bind(this)}
-                         onSwitchPanel={this.handleSwitchPanel.bind(this)}
-                         onSubmit={this.handleSubmit.bind(this)} />
+          <QuestionPanel
+            ref={'questionPanel'}
+            schema={this.state.schema}
+            classes={this.state.schema.classes}
+            panelId={currentPanel.panelId}
+            panelIndex={currentPanel.panelIndex}
+            panelHeader={currentPanel.panelHeader}
+            panelText={currentPanel.panelText}
+            action={currentPanel.action}
+            button={currentPanel.button}
+            backButton={currentPanel.backButton}
+            questionSets={currentPanel.questionSets}
+            questionAnswers={this.state.questionAnswers}
+            panelHistory={this.panelHistory}
+            renderError={this.props.renderError}
+            renderRequiredAsterisk={this.props.renderRequiredAsterisk}
+            onAnswerChange={this.handleAnswerChange.bind(this)}
+            onPanelBack={this.handleBackButtonClick.bind(this)}
+            onSwitchPanel={this.handleSwitchPanel.bind(this)}
+            onSubmit={this.handleSubmit.bind(this)} />
         </div>
       </form>
     );
