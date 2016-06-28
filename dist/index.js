@@ -10,6 +10,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
 
 var React = require('react');
 var _ = require('lodash').noConflict();
+var Validation = require('./lib/validation');
 
 var QuestionPanel = require('./questionPanel');
 
@@ -21,6 +22,7 @@ var Winterfell = (function (_React$Component) {
 
     _get(Object.getPrototypeOf(Winterfell.prototype), 'constructor', this).call(this, props);
 
+    this._questionPanel = null;
     this.panelHistory = [];
 
     var schema = _.extend({
@@ -60,6 +62,28 @@ var Winterfell = (function (_React$Component) {
         schema: nextProps.schema,
         questionAnswers: nextProps.questionAnswers
       });
+      if (!_.isEqual(nextProps.questionAnswers, this.props.questionAnswers)) {
+        this.props.onUpdate.bind(null, nextProps.questionAnswers);
+      }
+    }
+  }, {
+    key: 'validatePanels',
+    value: function validatePanels() {
+      var validPanelIds = [];
+      for (var qP in this.state.schema.questionPanels) {
+        var questionPanel = this.state.schema.questionPanels[qP];
+        var questionSetIds = questionPanel.questionSets.map(function (qS) {
+          return qS.questionSetId;
+        });
+        var questionSets = _.chain(this.state.schema.questionSets).filter(function (qS) {
+          return questionSetIds.indexOf(qS.questionSetId) > -1;
+        }).value();
+        var invalidQuestions = Validation.getQuestionPanelInvalidQuestions(questionSets, this.state.questionAnswers);
+        if (_.isEmpty(invalidQuestions)) {
+          validPanelIds.push(questionPanel.panelId);
+        }
+      }
+      this.props.onValidatePanels(validPanelIds);
     }
   }, {
     key: 'handleAnswerChange',
@@ -91,7 +115,7 @@ var Winterfell = (function (_React$Component) {
       if (currentPanel && currentPanel != panel) {
         // If we are moving to the next panel, validate the current one
         if (panel.index > currentPanel.index) {
-          if (this.refs.questionPanel.validatePanel() === false) {
+          if (this._questionPanel.validatePanel() === false) {
             // If current panel is invalid, do not update state
             updateState = false;
             return;
@@ -107,10 +131,10 @@ var Winterfell = (function (_React$Component) {
         // Same panel, do nothing
         return;
       }
-
+      var nextPanel = updateState ? panel : currentPanel;
       this.setState({
-        currentPanel: updateState ? panel : currentPanel
-      }, this.props.onSwitchPanel.bind(null, panel));
+        currentPanel: nextPanel
+      }, this.props.onSwitchPanel.bind(null, nextPanel));
     }
   }, {
     key: 'handleBackButtonClick',
@@ -138,6 +162,11 @@ var Winterfell = (function (_React$Component) {
       });
     }
   }, {
+    key: 'handleValidatePanel',
+    value: function handleValidatePanel(isValid) {
+      this.props.onValidatePanel(this.state.currentPanel.panelId, isValid);
+    }
+  }, {
     key: 'render',
     value: function render() {
       var _this2 = this;
@@ -156,9 +185,7 @@ var Winterfell = (function (_React$Component) {
         React.createElement(
           'div',
           { className: this.state.schema.classes.questionPanels },
-          React.createElement(QuestionPanel, {
-            ref: 'questionPanel',
-            schema: this.state.schema,
+          React.createElement(QuestionPanel, { schema: this.state.schema,
             classes: this.state.schema.classes,
             panelId: currentPanel.panelId,
             panelIndex: currentPanel.panelIndex,
@@ -170,12 +197,18 @@ var Winterfell = (function (_React$Component) {
             questionSets: currentPanel.questionSets,
             questionAnswers: this.state.questionAnswers,
             panelHistory: this.panelHistory,
+            ref: function (qP) {
+              return _this2._questionPanel = qP;
+            },
             renderError: this.props.renderError,
             renderRequiredAsterisk: this.props.renderRequiredAsterisk,
             onAnswerChange: this.handleAnswerChange.bind(this),
             onPanelBack: this.handleBackButtonClick.bind(this),
             onSwitchPanel: this.handleSwitchPanel.bind(this),
-            onSubmit: this.handleSubmit.bind(this) })
+            onSubmit: this.handleSubmit.bind(this),
+            onSubmit: this.handleSubmit.bind(this),
+            onValidatePanel: this.handleValidatePanel.bind(this)
+          })
         )
       );
     }
@@ -212,12 +245,14 @@ Winterfell.defaultProps = {
   onSubmit: function onSubmit() {},
   onUpdate: function onUpdate() {},
   onSwitchPanel: function onSwitchPanel() {},
-  onRender: function onRender() {}
+  onRender: function onRender() {},
+  onValidatePanel: function onValidatePanel() {},
+  onValidatePanels: function onValidatePanels() {}
 };
 
 Winterfell.inputTypes = require('./inputTypes');
 Winterfell.errorMessages = require('./lib/errors');
-Winterfell.validation = require('./lib/validation');
+Winterfell.validation = Validation;
 
 Winterfell.addInputType = Winterfell.inputTypes.addInputType;
 Winterfell.addInputTypes = Winterfell.inputTypes.addInputTypes;

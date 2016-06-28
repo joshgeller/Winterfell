@@ -37,7 +37,7 @@ class QuestionPanel extends React.Component {
           return;
         }
 
-        // Make answer available to custom validation rules.
+        // Pass the user's answer value to custom validation rules.
         validation.questionAnswer = questionAnswer;
 
         questionValidationErrors.push({
@@ -53,11 +53,14 @@ class QuestionPanel extends React.Component {
     this.setState({
       validationErrors : validationErrors
     });
+
+    this.validatePanel(false)
   }
 
-  validatePanel() {
+  validatePanel(showErrorMessages) {
     var action     = this.props.action.default;
     var conditions = this.props.action.conditions || [];
+    var showErrors = showErrorMessages || true
 
     /*
      * We need to get all the question sets for this panel.
@@ -79,20 +82,27 @@ class QuestionPanel extends React.Component {
     /*
      * If the panel isn't valid...
      */
-    if (Object.keys(invalidQuestions).length > 0) {
-      var validationErrors = _.mapValues(invalidQuestions, validations => {
-        return validations.map(validation => {
-          return {
-            type    : validation.type,
-            message : ErrorMessages.getErrorMessage(validation)
-          };
-        })
-      });
+    if (showErrorMessages) {
+      if (Object.keys(invalidQuestions).length > 0) {
+        var validationErrors = _.mapValues(invalidQuestions, validations => {
+          return validations.map(validation => {
+            return {
+              type    : validation.type,
+              message : ErrorMessages.getErrorMessage(validation)
+            };
+          })
+        });
 
-      this.setState({
-        validationErrors : validationErrors
-      });
+        this.setState({
+          validationErrors : validationErrors
+        });
+      }
     }
+
+    this.props.onValidatePanel(
+      Object.keys(invalidQuestions).length === 0
+    )
+
     return Object.keys(invalidQuestions).length === 0
   }
 
@@ -181,19 +191,19 @@ class QuestionPanel extends React.Component {
 
       return (
         <QuestionSet key={questionSet.questionSetId}
-                     id={questionSet.questionSetId}
-                     name={questionSet.name}
-                     questionSetHeader={questionSet.questionSetHeader}
-                     questionSetText={questionSet.questionSetText}
-                     questions={questionSet.questions}
-                     classes={this.props.classes}
-                     questionAnswers={this.props.questionAnswers}
-                     renderError={this.props.renderError}
-                     renderRequiredAsterisk={this.props.renderRequiredAsterisk}
-                     validationErrors={this.state.validationErrors}
-                     onAnswerChange={this.handleAnswerChange.bind(this)}
-                     onQuestionBlur={this.handleQuestionBlur.bind(this)}
-                     onKeyDown={this.handleInputKeyDown.bind(this)} />
+          id={questionSet.questionSetId}
+          name={questionSet.name}
+          questionSetHeader={questionSet.questionSetHeader}
+          questionSetText={questionSet.questionSetText}
+          questions={questionSet.questions}
+          classes={this.props.classes}
+          questionAnswers={this.props.questionAnswers}
+          renderError={this.props.renderError}
+          renderRequiredAsterisk={this.props.renderRequiredAsterisk}
+          validationErrors={this.state.validationErrors}
+          onAnswerChange={this.handleAnswerChange.bind(this)}
+          onQuestionBlur={this.handleQuestionBlur.bind(this)}
+          onKeyDown={this.handleInputKeyDown.bind(this)} />
       );
     });
 
@@ -234,11 +244,11 @@ class QuestionPanel extends React.Component {
           : undefined}
           {!this.props.button.disabled
             ? (
-              <Button ref='mainButton' text={this.props.button.text}
+              <Button text={this.props.button.text}
                 onClick={this.handleMainButtonClick.bind(this)}
                 className={this.props.classes.controlButton} />
             )
-            : undefined}
+          : undefined}
         </div>
       </div>
     );
@@ -271,6 +281,8 @@ QuestionPanel.defaultProps = {
   onAnswerChange         : () => {},
   onSwitchPanel          : () => {},
   onPanelBack            : () => {},
+  onPanelBack            : () => {},
+  onValidatePanel        : () => {},
   panelHistory           : [],
 };
 

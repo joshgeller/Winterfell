@@ -50,7 +50,7 @@ var QuestionPanel = (function (_React$Component) {
           return;
         }
 
-        // Make answer available to custom validation rules.
+        // Pass the user's answer value to custom validation rules.
         validation.questionAnswer = questionAnswer;
 
         questionValidationErrors.push({
@@ -64,12 +64,15 @@ var QuestionPanel = (function (_React$Component) {
       this.setState({
         validationErrors: validationErrors
       });
+
+      this.validatePanel(false);
     }
   }, {
     key: 'validatePanel',
-    value: function validatePanel() {
+    value: function validatePanel(showErrorMessages) {
       var action = this.props.action['default'];
       var conditions = this.props.action.conditions || [];
+      var showErrors = showErrorMessages || true;
 
       /*
        * We need to get all the question sets for this panel.
@@ -91,20 +94,25 @@ var QuestionPanel = (function (_React$Component) {
       /*
        * If the panel isn't valid...
        */
-      if (Object.keys(invalidQuestions).length > 0) {
-        var validationErrors = _.mapValues(invalidQuestions, function (validations) {
-          return validations.map(function (validation) {
-            return {
-              type: validation.type,
-              message: ErrorMessages.getErrorMessage(validation)
-            };
+      if (showErrorMessages) {
+        if (Object.keys(invalidQuestions).length > 0) {
+          var validationErrors = _.mapValues(invalidQuestions, function (validations) {
+            return validations.map(function (validation) {
+              return {
+                type: validation.type,
+                message: ErrorMessages.getErrorMessage(validation)
+              };
+            });
           });
-        });
 
-        this.setState({
-          validationErrors: validationErrors
-        });
+          this.setState({
+            validationErrors: validationErrors
+          });
+        }
       }
+
+      this.props.onValidatePanel(Object.keys(invalidQuestions).length === 0);
+
       return Object.keys(invalidQuestions).length === 0;
     }
   }, {
@@ -240,7 +248,7 @@ var QuestionPanel = (function (_React$Component) {
           this.props.panelHistory.length > 1 && !this.props.backButton.disabled ? React.createElement(Button, { text: this.props.backButton.text || 'Back',
             onClick: this.handleBackButtonClick.bind(this),
             className: this.props.classes.backButton }) : undefined,
-          !this.props.button.disabled ? React.createElement(Button, { ref: 'mainButton', text: this.props.button.text,
+          !this.props.button.disabled ? React.createElement(Button, { text: this.props.button.text,
             onClick: this.handleMainButtonClick.bind(this),
             className: this.props.classes.controlButton }) : undefined
         )
@@ -278,6 +286,8 @@ QuestionPanel.defaultProps = {
   onAnswerChange: function onAnswerChange() {},
   onSwitchPanel: function onSwitchPanel() {},
   onPanelBack: function onPanelBack() {},
+  onPanelBack: function onPanelBack() {},
+  onValidatePanel: function onValidatePanel() {},
   panelHistory: []
 };
 
