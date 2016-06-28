@@ -47,25 +47,27 @@ class Question extends React.Component {
           })
           .forEach(option =>
             [].forEach.bind(option.conditionalQuestions, conditionalQuestion => {
-              conditionalItems.push(
-                <Question key={conditionalQuestion.questionId}
-                          questionSetId={this.props.questionSetId}
-                          questionId={conditionalQuestion.questionId}
-                          question={conditionalQuestion.question}
-                          text={conditionalQuestion.text}
-                          postText={conditionalQuestion.postText}
-                          validateOn={conditionalQuestion.validateOn}
-                          validations={conditionalQuestion.validations}
-                          value={this.props.questionAnswers[conditionalQuestion.questionId]}
-                          input={conditionalQuestion.input}
-                          classes={this.props.classes}
-                          renderError={this.props.renderError}
-                          questionAnswers={this.props.questionAnswers}
-                          validationErrors={this.props.validationErrors}
-                          onAnswerChange={this.props.onAnswerChange}
-                          onQuestionBlur={this.props.onQuestionBlur}
-                          onKeyDown={this.props.onKeyDown} />
-              );
+              if (conditionalQuestion.input.props.selectOptions.length > 1) {
+                conditionalItems.push(
+                  <Question key={conditionalQuestion.questionId}
+                            questionSetId={this.props.questionSetId}
+                            questionId={conditionalQuestion.questionId}
+                            question={conditionalQuestion.question}
+                            text={conditionalQuestion.text}
+                            postText={conditionalQuestion.postText}
+                            validateOn={conditionalQuestion.validateOn}
+                            validations={conditionalQuestion.validations}
+                            value={this.props.questionAnswers[conditionalQuestion.questionId]}
+                            input={conditionalQuestion.input}
+                            classes={this.props.classes}
+                            renderError={this.props.renderError}
+                            questionAnswers={this.props.questionAnswers}
+                            validationErrors={this.props.validationErrors}
+                            onAnswerChange={this.props.onAnswerChange}
+                            onQuestionBlur={this.props.onQuestionBlur}
+                            onKeyDown={this.props.onKeyDown} />
+                );
+              }
             }
           )());
     }
@@ -107,54 +109,58 @@ class Question extends React.Component {
     }
 
     return (
-      <div className={this.props.classes.question}>
-        {!!this.props.question
-          ? (
-            <label className={this.props.classes.label}
-              id={labelId}
-              htmlFor={this.props.questionId}>
-              {this.props.question}
-              {typeof this.props.renderRequiredAsterisk !== 'undefined'
-                && this.props.input.required
-                ? this.props.renderRequiredAsterisk()
-              : undefined}
-            </label>
-          )
-        : undefined}
-        {!!this.props.text
-          ? (
-            <p className={this.props.classes.questionText}>
-              {this.props.text}
-            </p>
-          )
-        : undefined}
-        {validationErrors}
-        <div className='row'>
-          <div className={colSize}>
-            <Input name={this.props.questionId}
-              id={this.props.questionId}
-              labelId={labelId}
-              value={value}
-              text={this.props.input.text}
-              options={this.props.input.options}
-              placeholder={this.props.input.placeholder}
-              required={this.props.input.required}
-              classes={this.props.classes}
-              onChange={this.handleInputChange.bind(this, this.props.questionId)}
-              onBlur={this.handleInputBlur.bind(this, this.props.questionId)}
-              onKeyDown={this.props.onKeyDown}
-              {...extraprops}
-            />
+      <div>
+        <div className={this.props.classes.question}>
+          {!!this.props.question
+            ? (
+              <label className={this.props.classes.label}
+                id={labelId}
+                htmlFor={this.props.questionId}>
+                {typeof this.props.renderRequiredAsterisk !== 'undefined'
+                  && this.props.input.required
+                  ? this.props.renderRequiredAsterisk()
+                : undefined}
+                {this.props.question}
+              </label>
+            )
+          : undefined}
+          {!!this.props.text
+            ? (
+              <p className={this.props.classes.questionText}>
+                {this.props.text}
+              </p>
+            )
+          : undefined}
+          {validationErrors}
+          <div className='row'>
+            <div className={colSize}>
+              <Input name={this.props.questionId}
+                id={this.props.questionId}
+                labelId={labelId}
+                value={value}
+                text={this.props.input.text}
+                options={this.props.input.options}
+                placeholder={this.props.input.placeholder}
+                required={this.props.input.required}
+                classes={this.props.classes}
+                onChange={this.handleInputChange.bind(this, this.props.questionId)}
+                onBlur={this.handleInputBlur.bind(this, this.props.questionId)}
+                onKeyDown={this.props.onKeyDown}
+                {...extraprops}
+              />
+            </div>
           </div>
+          {!!this.props.postText
+            ? (
+              <p className={this.props.classes.questionPostText}>
+                {this.props.postText}
+              </p>
+            )
+          : undefined}
         </div>
-        {!!this.props.postText
-          ? (
-            <p className={this.props.classes.questionPostText}>
-              {this.props.postText}
-            </p>
-          )
-        : undefined}
-        {conditionalItems}
+        <div style={{ marginTop: '1em' }}>
+          {conditionalItems}
+        </div>
       </div>
     );
   }

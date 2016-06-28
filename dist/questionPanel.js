@@ -250,7 +250,8 @@ var QuestionPanel = (function (_React$Component) {
             className: this.props.classes.backButton }) : undefined,
           !this.props.button.disabled ? React.createElement(Button, { text: this.props.button.text,
             onClick: this.handleMainButtonClick.bind(this),
-            className: this.props.classes.controlButton }) : undefined
+            className: this.props.classes.controlButton }) : undefined,
+          this.props.publishButton ? this.props.publishButton(this.props.classes.publishButton) : undefined
         )
       );
     }
@@ -269,6 +270,7 @@ QuestionPanel.defaultProps = {
   panelIndex: undefined,
   panelHeader: undefined,
   panelText: undefined,
+  publishButton: undefined,
   action: {
     'default': {},
     conditions: []

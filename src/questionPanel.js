@@ -249,6 +249,9 @@ class QuestionPanel extends React.Component {
                 className={this.props.classes.controlButton} />
             )
           : undefined}
+          {this.props.publishButton
+            ? this.props.publishButton(this.props.classes.publishButton)
+          : undefined}
         </div>
       </div>
     );
@@ -264,6 +267,7 @@ QuestionPanel.defaultProps = {
   panelIndex             : undefined,
   panelHeader            : undefined,
   panelText              : undefined,
+  publishButton          : undefined,
   action                 : {
     default    : {},
     conditions : []

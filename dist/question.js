@@ -55,23 +55,25 @@ var Question = (function (_React$Component) {
           return typeof option.conditionalQuestions !== 'undefined' && option.conditionalQuestions.length > 0;
         }).forEach(function (option) {
           return [].forEach.bind(option.conditionalQuestions, function (conditionalQuestion) {
-            conditionalItems.push(React.createElement(Question, { key: conditionalQuestion.questionId,
-              questionSetId: _this.props.questionSetId,
-              questionId: conditionalQuestion.questionId,
-              question: conditionalQuestion.question,
-              text: conditionalQuestion.text,
-              postText: conditionalQuestion.postText,
-              validateOn: conditionalQuestion.validateOn,
-              validations: conditionalQuestion.validations,
-              value: _this.props.questionAnswers[conditionalQuestion.questionId],
-              input: conditionalQuestion.input,
-              classes: _this.props.classes,
-              renderError: _this.props.renderError,
-              questionAnswers: _this.props.questionAnswers,
-              validationErrors: _this.props.validationErrors,
-              onAnswerChange: _this.props.onAnswerChange,
-              onQuestionBlur: _this.props.onQuestionBlur,
-              onKeyDown: _this.props.onKeyDown }));
+            if (conditionalQuestion.input.props.selectOptions.length > 1) {
+              conditionalItems.push(React.createElement(Question, { key: conditionalQuestion.questionId,
+                questionSetId: _this.props.questionSetId,
+                questionId: conditionalQuestion.questionId,
+                question: conditionalQuestion.question,
+                text: conditionalQuestion.text,
+                postText: conditionalQuestion.postText,
+                validateOn: conditionalQuestion.validateOn,
+                validations: conditionalQuestion.validations,
+                value: _this.props.questionAnswers[conditionalQuestion.questionId],
+                input: conditionalQuestion.input,
+                classes: _this.props.classes,
+                renderError: _this.props.renderError,
+                questionAnswers: _this.props.questionAnswers,
+                validationErrors: _this.props.validationErrors,
+                onAnswerChange: _this.props.onAnswerChange,
+                onQuestionBlur: _this.props.onQuestionBlur,
+                onKeyDown: _this.props.onKeyDown }));
+            }
           })();
         });
       }
@@ -102,48 +104,56 @@ var Question = (function (_React$Component) {
 
       return React.createElement(
         'div',
-        { className: this.props.classes.question },
-        !!this.props.question ? React.createElement(
-          'label',
-          { className: this.props.classes.label,
-            id: labelId,
-            htmlFor: this.props.questionId },
-          this.props.question,
-          typeof this.props.renderRequiredAsterisk !== 'undefined' && this.props.input.required ? this.props.renderRequiredAsterisk() : undefined
-        ) : undefined,
-        !!this.props.text ? React.createElement(
-          'p',
-          { className: this.props.classes.questionText },
-          this.props.text
-        ) : undefined,
-        validationErrors,
+        null,
         React.createElement(
           'div',
-          { className: 'row' },
+          { className: this.props.classes.question },
+          !!this.props.question ? React.createElement(
+            'label',
+            { className: this.props.classes.label,
+              id: labelId,
+              htmlFor: this.props.questionId },
+            typeof this.props.renderRequiredAsterisk !== 'undefined' && this.props.input.required ? this.props.renderRequiredAsterisk(this.props.input) : undefined,
+            this.props.question
+          ) : undefined,
+          !!this.props.text ? React.createElement(
+            'p',
+            { className: this.props.classes.questionText },
+            this.props.text
+          ) : undefined,
+          validationErrors,
           React.createElement(
             'div',
-            { className: colSize },
-            React.createElement(Input, _extends({ name: this.props.questionId,
-              id: this.props.questionId,
-              labelId: labelId,
-              value: value,
-              text: this.props.input.text,
-              options: this.props.input.options,
-              placeholder: this.props.input.placeholder,
-              required: this.props.input.required,
-              classes: this.props.classes,
-              onChange: this.handleInputChange.bind(this, this.props.questionId),
-              onBlur: this.handleInputBlur.bind(this, this.props.questionId),
-              onKeyDown: this.props.onKeyDown
-            }, extraprops))
-          )
+            { className: 'row' },
+            React.createElement(
+              'div',
+              { className: colSize },
+              React.createElement(Input, _extends({ name: this.props.questionId,
+                id: this.props.questionId,
+                labelId: labelId,
+                value: value,
+                text: this.props.input.text,
+                options: this.props.input.options,
+                placeholder: this.props.input.placeholder,
+                required: this.props.input.required,
+                classes: this.props.classes,
+                onChange: this.handleInputChange.bind(this, this.props.questionId),
+                onBlur: this.handleInputBlur.bind(this, this.props.questionId),
+                onKeyDown: this.props.onKeyDown
+              }, extraprops))
+            )
+          ),
+          !!this.props.postText ? React.createElement(
+            'p',
+            { className: this.props.classes.questionPostText },
+            this.props.postText
+          ) : undefined
         ),
-        !!this.props.postText ? React.createElement(
-          'p',
-          { className: this.props.classes.questionPostText },
-          this.props.postText
-        ) : undefined,
-        conditionalItems
+        React.createElement(
+          'div',
+          { style: { marginTop: '1em' } },
+          conditionalItems
+        )
       );
     }
   }, {

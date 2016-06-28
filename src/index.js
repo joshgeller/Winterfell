@@ -182,6 +182,7 @@ class Winterfell extends React.Component {
             questionSets={currentPanel.questionSets}
             questionAnswers={this.state.questionAnswers}
             panelHistory={this.panelHistory}
+            publishButton={this.props.publishButton}
             ref={(qP) => this._questionPanel = qP}
             renderError={this.props.renderError}
             renderRequiredAsterisk={this.props.renderRequiredAsterisk}
@@ -218,6 +219,7 @@ Winterfell.defaultProps = {
   method                 : 'POST',
   action                 : '',
   panelId                : undefined,
+  publishButton          : undefined,
   disableSubmit          : false,
   renderError            : undefined,
   renderRequiredAsterisk : undefined,

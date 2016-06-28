@@ -197,6 +197,7 @@ var Winterfell = (function (_React$Component) {
             questionSets: currentPanel.questionSets,
             questionAnswers: this.state.questionAnswers,
             panelHistory: this.panelHistory,
+            publishButton: this.props.publishButton,
             ref: function (qP) {
               return _this2._questionPanel = qP;
             },
@@ -239,6 +240,7 @@ Winterfell.defaultProps = {
   method: 'POST',
   action: '',
   panelId: undefined,
+  publishButto: undefined,
   disableSubmit: false,
   renderError: undefined,
   renderRequiredAsterisk: undefined,
