@@ -113,8 +113,8 @@ var Question = (function (_React$Component) {
             { className: this.props.classes.label,
               id: labelId,
               htmlFor: this.props.questionId },
-            typeof this.props.renderRequiredAsterisk !== 'undefined' && this.props.input.required ? this.props.renderRequiredAsterisk(this.props.input) : undefined,
-            this.props.question
+            this.props.question,
+            typeof this.props.renderRequiredAsterisk !== 'undefined' && this.props.input.required ? this.props.renderRequiredAsterisk() : undefined
           ) : undefined,
           !!this.props.text ? React.createElement(
             'p',

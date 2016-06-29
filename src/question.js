@@ -116,11 +116,11 @@ class Question extends React.Component {
               <label className={this.props.classes.label}
                 id={labelId}
                 htmlFor={this.props.questionId}>
+                {this.props.question}
                 {typeof this.props.renderRequiredAsterisk !== 'undefined'
                   && this.props.input.required
                   ? this.props.renderRequiredAsterisk()
                 : undefined}
-                {this.props.question}
               </label>
             )
           : undefined}

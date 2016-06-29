@@ -163,6 +163,8 @@ class Winterfell extends React.Component {
     var currentPanel = _.find(this.state.schema.questionPanels,
                           panel => panel.panelId == this.state.currentPanel.panelId);
 
+    var isValid = this.props.validPanelIds.indexOf(currentPanel.panelId) > -1
+
     return (
       <form method={this.props.method}
         encType={this.props.encType}
@@ -172,6 +174,7 @@ class Winterfell extends React.Component {
         <div className={this.state.schema.classes.questionPanels}>
           <QuestionPanel schema={this.state.schema}
             classes={this.state.schema.classes}
+            live={this.props.live}
             panelId={currentPanel.panelId}
             panelIndex={currentPanel.panelIndex}
             panelHeader={currentPanel.panelHeader}
@@ -192,6 +195,7 @@ class Winterfell extends React.Component {
             onSubmit={this.handleSubmit.bind(this)}
             onSubmit={this.handleSubmit.bind(this)}
             onValidatePanel={this.handleValidatePanel.bind(this)}
+            isValid={isValid}
           />
         </div>
       </form>
@@ -221,6 +225,7 @@ Winterfell.defaultProps = {
   panelId                : undefined,
   publishButton          : undefined,
   disableSubmit          : false,
+  live                   : false,
   renderError            : undefined,
   renderRequiredAsterisk : undefined,
   onSubmit               : () => {},
@@ -229,6 +234,7 @@ Winterfell.defaultProps = {
   onRender               : () => {},
   onValidatePanel        : () => {},
   onValidatePanels       : () => {},
+  validPanelIds          : [],
 };
 
 Winterfell.inputTypes    = require('./inputTypes');

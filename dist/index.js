@@ -175,6 +175,8 @@ var Winterfell = (function (_React$Component) {
         return panel.panelId == _this2.state.currentPanel.panelId;
       });
 
+      var isValid = this.props.validPanelIds.indexOf(currentPanel.panelId) > -1;
+
       return React.createElement(
         'form',
         { method: this.props.method,
@@ -187,6 +189,7 @@ var Winterfell = (function (_React$Component) {
           { className: this.state.schema.classes.questionPanels },
           React.createElement(QuestionPanel, { schema: this.state.schema,
             classes: this.state.schema.classes,
+            live: this.props.live,
             panelId: currentPanel.panelId,
             panelIndex: currentPanel.panelIndex,
             panelHeader: currentPanel.panelHeader,
@@ -208,7 +211,8 @@ var Winterfell = (function (_React$Component) {
             onSwitchPanel: this.handleSwitchPanel.bind(this),
             onSubmit: this.handleSubmit.bind(this),
             onSubmit: this.handleSubmit.bind(this),
-            onValidatePanel: this.handleValidatePanel.bind(this)
+            onValidatePanel: this.handleValidatePanel.bind(this),
+            isValid: isValid
           })
         )
       );
@@ -240,8 +244,9 @@ Winterfell.defaultProps = {
   method: 'POST',
   action: '',
   panelId: undefined,
-  publishButto: undefined,
+  publishButton: undefined,
   disableSubmit: false,
+  live: false,
   renderError: undefined,
   renderRequiredAsterisk: undefined,
   onSubmit: function onSubmit() {},
@@ -249,7 +254,8 @@ Winterfell.defaultProps = {
   onSwitchPanel: function onSwitchPanel() {},
   onRender: function onRender() {},
   onValidatePanel: function onValidatePanel() {},
-  onValidatePanels: function onValidatePanels() {}
+  onValidatePanels: function onValidatePanels() {},
+  validPanelIds: []
 };
 
 Winterfell.inputTypes = require('./inputTypes');

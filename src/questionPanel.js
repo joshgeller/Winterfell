@@ -18,6 +18,12 @@ class QuestionPanel extends React.Component {
     };
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.live && prevProps.panelId != this.props.panelId) {
+      this.validatePanel(true)
+    }
+  }
+
   handleAnswerValidate(questionId, questionAnswer, validations) {
     if (typeof validations === 'undefined'
          || validations.length === 0) {
@@ -54,6 +60,7 @@ class QuestionPanel extends React.Component {
       validationErrors : validationErrors
     });
 
+    // Validate panel, but don't show error messages for all questions.
     this.validatePanel(false)
   }
 
@@ -227,6 +234,16 @@ class QuestionPanel extends React.Component {
                   </p>
                 )
               : undefined}
+              {!this.props.isValid
+                ? (
+                  <div className={this.props.classes.invalidPanelMessage}>
+                    <p>
+                      <i className='fa fa-exclamation-circle'></i>{' '}
+                      Whoops! Please correct the errors in red below.
+                    </p>
+                  </div>
+                )
+              : undefined}
             </div>
           )
         : undefined}
@@ -263,6 +280,8 @@ QuestionPanel.defaultProps = {
   validationErrors       : {},
   schema                 : {},
   classes                : {},
+  live                   : false,
+  isValid                : true,
   panelId                : undefined,
   panelIndex             : undefined,
   panelHeader            : undefined,

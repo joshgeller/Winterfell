@@ -32,6 +32,13 @@ var QuestionPanel = (function (_React$Component) {
   }
 
   _createClass(QuestionPanel, [{
+    key: 'componentDidUpdate',
+    value: function componentDidUpdate(prevProps, prevState) {
+      if (this.props.live && prevProps.panelId != this.props.panelId) {
+        this.validatePanel(true);
+      }
+    }
+  }, {
     key: 'handleAnswerValidate',
     value: function handleAnswerValidate(questionId, questionAnswer, validations) {
       var _this = this;
@@ -65,6 +72,7 @@ var QuestionPanel = (function (_React$Component) {
         validationErrors: validationErrors
       });
 
+      // Validate panel, but don't show error messages for all questions.
       this.validatePanel(false);
     }
   }, {
@@ -235,6 +243,17 @@ var QuestionPanel = (function (_React$Component) {
             'p',
             { className: this.props.classes.questionPanelText },
             this.props.panelText
+          ) : undefined,
+          !this.props.isValid ? React.createElement(
+            'div',
+            { className: this.props.classes.invalidPanelMessage },
+            React.createElement(
+              'p',
+              null,
+              React.createElement('i', { className: 'fa fa-exclamation-circle' }),
+              ' ',
+              'Whoops! Please correct the errors in red below.'
+            )
           ) : undefined
         ) : undefined,
         React.createElement(
@@ -266,6 +285,8 @@ QuestionPanel.defaultProps = {
   validationErrors: {},
   schema: {},
   classes: {},
+  live: false,
+  isValid: true,
   panelId: undefined,
   panelIndex: undefined,
   panelHeader: undefined,
