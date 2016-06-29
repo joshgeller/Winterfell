@@ -89,6 +89,7 @@ class QuestionPanel extends React.Component {
     /*
      * If the panel isn't valid...
      */
+  
     if (showErrorMessages) {
       if (Object.keys(invalidQuestions).length > 0) {
         var validationErrors = _.mapValues(invalidQuestions, validations => {
@@ -234,7 +235,7 @@ class QuestionPanel extends React.Component {
                   </p>
                 )
               : undefined}
-              {!this.props.isValid
+              {!this.props.isValid && this.props.live
                 ? (
                   <div className={this.props.classes.invalidPanelMessage}>
                     <p>

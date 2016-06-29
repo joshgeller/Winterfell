@@ -110,26 +110,21 @@ var Winterfell = (function (_React$Component) {
 
       var currentPanel = _.find(this.props.schema.formPanels, {
         panelId: this.panelHistory[this.panelHistory.length - 1]
-      });
+      }) || this.props.schema.formPanels[0];
 
-      if (currentPanel && currentPanel != panel) {
-        // If we are moving to the next panel, validate the current one
-        if (panel.index > currentPanel.index) {
-          if (this._questionPanel.validatePanel() === false) {
-            // If current panel is invalid, do not update state
-            updateState = false;
-            return;
-          } else {
-            // If validation is okay, add new panel to panel history
-            this.panelHistory.push(panel.panelId);
-          }
+      // If we are moving to the next panel, validate the current one
+      if (panel.index >= currentPanel.index) {
+        if (this._questionPanel.validatePanel(true) === false) {
+          // If current panel is invalid, do not update state
+          updateState = false;
+          return;
         } else {
-          // Going backwards
-          this.panelHistory.pop();
+          // If validation is okay, add new panel to panel history
+          this.panelHistory.push(panel.panelId);
         }
       } else {
-        // Same panel, do nothing
-        return;
+        // Going backwards
+        this.panelHistory.pop();
       }
       var nextPanel = updateState ? panel : currentPanel;
       this.setState({

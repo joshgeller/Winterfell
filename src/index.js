@@ -101,31 +101,26 @@ class Winterfell extends React.Component {
 
     var currentPanel = _.find(this.props.schema.formPanels, {
       panelId: this.panelHistory[this.panelHistory.length - 1]
-    });
+    }) || this.props.schema.formPanels[0];
 
-    if (currentPanel && currentPanel != panel) {
-          // If we are moving to the next panel, validate the current one
-          if (panel.index > currentPanel.index) {
-              if (this._questionPanel.validatePanel() === false) {
-                  // If current panel is invalid, do not update state
-                  updateState = false;
-                  return;
-              } else {
-                  // If validation is okay, add new panel to panel history
-                  this.panelHistory.push(panel.panelId);
-              }
-          } else {
-            // Going backwards
-            this.panelHistory.pop();
-          }
-      } else {
-          // Same panel, do nothing
-          return;
-      }
-      const nextPanel = updateState ? panel : currentPanel
-      this.setState({
-        currentPanel : nextPanel
-      }, this.props.onSwitchPanel.bind(null, nextPanel));
+    // If we are moving to a new panel, validate the current one
+    if (panel.index >= currentPanel.index) {
+        if (this._questionPanel.validatePanel(true) === false) {
+            // If current panel is invalid, do not update state
+            updateState = false;
+            return;
+        } else {
+            // If validation is okay, add new panel to panel history
+            this.panelHistory.push(panel.panelId);
+        }
+    } else {
+      // Going backwards
+      this.panelHistory.pop();
+    }
+    const nextPanel = updateState ? panel : currentPanel
+    this.setState({
+      currentPanel : nextPanel
+    }, this.props.onSwitchPanel.bind(null, nextPanel));
   }
 
   handleBackButtonClick() {

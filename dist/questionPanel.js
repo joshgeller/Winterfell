@@ -102,6 +102,7 @@ var QuestionPanel = (function (_React$Component) {
       /*
        * If the panel isn't valid...
        */
+
       if (showErrorMessages) {
         if (Object.keys(invalidQuestions).length > 0) {
           var validationErrors = _.mapValues(invalidQuestions, function (validations) {
@@ -244,7 +245,7 @@ var QuestionPanel = (function (_React$Component) {
             { className: this.props.classes.questionPanelText },
             this.props.panelText
           ) : undefined,
-          !this.props.isValid ? React.createElement(
+          !this.props.isValid && this.props.live ? React.createElement(
             'div',
             { className: this.props.classes.invalidPanelMessage },
             React.createElement(
