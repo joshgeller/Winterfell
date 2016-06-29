@@ -32,9 +32,22 @@ var QuestionPanel = (function (_React$Component) {
   }
 
   _createClass(QuestionPanel, [{
+    key: 'componentWillMount',
+    value: function componentWillMount() {
+      /*
+       * If the user is editing the builder, validate the first panel on mount.
+       */
+      if (this.props.live) {
+        this.validatePanel(true);
+      }
+    }
+  }, {
     key: 'componentDidUpdate',
     value: function componentDidUpdate(prevProps, prevState) {
-      if (this.props.live && prevProps.panelId != this.props.panelId) {
+      /*
+       * If the panel switches in edit mode, trigger validation.
+       */
+      if (this.props.live && prevProps.panelId !== this.props.panelId) {
         this.validatePanel(true);
       }
     }
@@ -72,15 +85,18 @@ var QuestionPanel = (function (_React$Component) {
         validationErrors: validationErrors
       });
 
-      // Validate panel, but don't show error messages for all questions.
+      // Validate the panel, but don't show error messages for all questions.
       this.validatePanel(false);
     }
   }, {
     key: 'validatePanel',
     value: function validatePanel(showErrorMessages) {
+      console.log('validate panel, show errors', this.props.panelId, showErrorMessages);
       var action = this.props.action['default'];
       var conditions = this.props.action.conditions || [];
-      var showErrors = showErrorMessages || true;
+      if (showErrorMessages === undefined) {
+        showErrorMessages = true;
+      }
 
       /*
        * We need to get all the question sets for this panel.
@@ -102,7 +118,6 @@ var QuestionPanel = (function (_React$Component) {
       /*
        * If the panel isn't valid...
        */
-
       if (showErrorMessages) {
         if (Object.keys(invalidQuestions).length > 0) {
           var validationErrors = _.mapValues(invalidQuestions, function (validations) {

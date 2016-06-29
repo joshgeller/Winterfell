@@ -84,6 +84,7 @@ var Winterfell = (function (_React$Component) {
         }
       }
       this.props.onValidatePanels(validPanelIds);
+      return validPanelIds;
     }
   }, {
     key: 'handleAnswerChange',
@@ -96,7 +97,8 @@ var Winterfell = (function (_React$Component) {
     }
   }, {
     key: 'handleSwitchPanel',
-    value: function handleSwitchPanel(panelId, preventHistory) {
+    value: function handleSwitchPanel(panelId, preventHistory, validateOnRender) {
+      var _this = this;
 
       var updateState = true;
 
@@ -108,11 +110,11 @@ var Winterfell = (function (_React$Component) {
         throw new Error('Winterfell: Tried to switch to panel "' + panelId + '", which does not exist.');
       }
 
-      var currentPanel = _.find(this.props.schema.formPanels, {
+      var currentPanel = this.panelHistory.length > 1 ? _.find(this.props.schema.formPanels, {
         panelId: this.panelHistory[this.panelHistory.length - 1]
-      }) || this.props.schema.formPanels[0];
+      }) : this.props.schema.formPanels[0];
 
-      // If we are moving to the next panel, validate the current one
+      // If we are moving to a new panel, validate the current one
       if (panel.index >= currentPanel.index) {
         if (this._questionPanel.validatePanel(true) === false) {
           // If current panel is invalid, do not update state
@@ -129,7 +131,12 @@ var Winterfell = (function (_React$Component) {
       var nextPanel = updateState ? panel : currentPanel;
       this.setState({
         currentPanel: nextPanel
-      }, this.props.onSwitchPanel.bind(null, nextPanel));
+      }, function () {
+        _this.props.onSwitchPanel(nextPanel);
+        if (validateOnRender) {
+          _this._questionPanel.validatePanel(true);
+        }
+      });
     }
   }, {
     key: 'handleBackButtonClick',
@@ -139,7 +146,7 @@ var Winterfell = (function (_React$Component) {
   }, {
     key: 'handleSubmit',
     value: function handleSubmit(action) {
-      var _this = this;
+      var _this2 = this;
 
       if (this.props.disableSubmit) {
         this.props.onSubmit(this.state.questionAnswers, action);
@@ -153,7 +160,7 @@ var Winterfell = (function (_React$Component) {
       this.setState({
         action: action
       }, function () {
-        React.findDOMNode(_this.refs[_this.props.ref]).submit();
+        React.findDOMNode(_this2.refs[_this2.props.ref]).submit();
       });
     }
   }, {
@@ -164,10 +171,10 @@ var Winterfell = (function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
-      var _this2 = this;
+      var _this3 = this;
 
       var currentPanel = _.find(this.state.schema.questionPanels, function (panel) {
-        return panel.panelId == _this2.state.currentPanel.panelId;
+        return panel.panelId == _this3.state.currentPanel.panelId;
       });
 
       var isValid = this.props.validPanelIds.indexOf(currentPanel.panelId) > -1;
@@ -197,7 +204,7 @@ var Winterfell = (function (_React$Component) {
             panelHistory: this.panelHistory,
             publishButton: this.props.publishButton,
             ref: function (qP) {
-              return _this2._questionPanel = qP;
+              return _this3._questionPanel = qP;
             },
             renderError: this.props.renderError,
             renderRequiredAsterisk: this.props.renderRequiredAsterisk,

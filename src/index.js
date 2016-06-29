@@ -74,6 +74,7 @@ class Winterfell extends React.Component {
       }
     }
     this.props.onValidatePanels(validPanelIds);
+    return validPanelIds;
   }
 
   handleAnswerChange(questionId, questionAnswer) {
@@ -86,7 +87,7 @@ class Winterfell extends React.Component {
     }, this.props.onUpdate.bind(null, questionAnswers));
   }
 
-  handleSwitchPanel(panelId, preventHistory) {
+  handleSwitchPanel(panelId, preventHistory, validateOnRender) {
 
     let updateState = true;
 
@@ -99,9 +100,13 @@ class Winterfell extends React.Component {
                       + panelId + '", which does not exist.');
     }
 
-    var currentPanel = _.find(this.props.schema.formPanels, {
-      panelId: this.panelHistory[this.panelHistory.length - 1]
-    }) || this.props.schema.formPanels[0];
+    var currentPanel = (
+      this.panelHistory.length > 1
+      ? _.find(this.props.schema.formPanels, {
+        panelId: this.panelHistory[this.panelHistory.length - 1]
+      })
+      : this.props.schema.formPanels[0]
+    )
 
     // If we are moving to a new panel, validate the current one
     if (panel.index >= currentPanel.index) {
@@ -120,7 +125,12 @@ class Winterfell extends React.Component {
     const nextPanel = updateState ? panel : currentPanel
     this.setState({
       currentPanel : nextPanel
-    }, this.props.onSwitchPanel.bind(null, nextPanel));
+    }, () => {
+      this.props.onSwitchPanel(nextPanel);
+      if (validateOnRender) {
+        this._questionPanel.validatePanel(true);
+      }
+    });
   }
 
   handleBackButtonClick() {

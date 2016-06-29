@@ -18,9 +18,21 @@ class QuestionPanel extends React.Component {
     };
   }
 
+  componentWillMount() {
+    /*
+     * If the user is editing the builder, validate the first panel on mount.
+     */
+    if (this.props.live) {
+      this.validatePanel(true);
+    }
+  }
+
   componentDidUpdate(prevProps, prevState) {
-    if (this.props.live && prevProps.panelId != this.props.panelId) {
-      this.validatePanel(true)
+    /*
+     * If the panel switches in edit mode, trigger validation.
+     */
+    if (this.props.live && prevProps.panelId !== this.props.panelId) {
+      this.validatePanel(true);
     }
   }
 
@@ -60,14 +72,17 @@ class QuestionPanel extends React.Component {
       validationErrors : validationErrors
     });
 
-    // Validate panel, but don't show error messages for all questions.
+    // Validate the panel, but don't show error messages for all questions.
     this.validatePanel(false)
   }
 
   validatePanel(showErrorMessages) {
+    console.log('validate panel, show errors', this.props.panelId, showErrorMessages);
     var action     = this.props.action.default;
     var conditions = this.props.action.conditions || [];
-    var showErrors = showErrorMessages || true
+    if (showErrorMessages === undefined) {
+      showErrorMessages = true;
+    }
 
     /*
      * We need to get all the question sets for this panel.
@@ -89,7 +104,6 @@ class QuestionPanel extends React.Component {
     /*
      * If the panel isn't valid...
      */
-  
     if (showErrorMessages) {
       if (Object.keys(invalidQuestions).length > 0) {
         var validationErrors = _.mapValues(invalidQuestions, validations => {
