@@ -47,7 +47,7 @@ class Question extends React.Component {
           })
           .forEach(option =>
             [].forEach.bind(option.conditionalQuestions, conditionalQuestion => {
-              if (conditionalQuestion.input.props.selectOptions.length > 1) {
+
                 conditionalItems.push(
                   <Question key={conditionalQuestion.questionId}
                             questionSetId={this.props.questionSetId}
@@ -67,7 +67,6 @@ class Question extends React.Component {
                             onQuestionBlur={this.props.onQuestionBlur}
                             onKeyDown={this.props.onKeyDown} />
                 );
-              }
             }
           )());
     }

@@ -91,7 +91,6 @@ var QuestionPanel = (function (_React$Component) {
   }, {
     key: 'validatePanel',
     value: function validatePanel(showErrorMessages) {
-      console.log('validate panel, show errors', this.props.panelId, showErrorMessages);
       var action = this.props.action['default'];
       var conditions = this.props.action.conditions || [];
       if (showErrorMessages === undefined) {

@@ -55,25 +55,24 @@ var Question = (function (_React$Component) {
           return typeof option.conditionalQuestions !== 'undefined' && option.conditionalQuestions.length > 0;
         }).forEach(function (option) {
           return [].forEach.bind(option.conditionalQuestions, function (conditionalQuestion) {
-            if (conditionalQuestion.input.props.selectOptions.length > 1) {
-              conditionalItems.push(React.createElement(Question, { key: conditionalQuestion.questionId,
-                questionSetId: _this.props.questionSetId,
-                questionId: conditionalQuestion.questionId,
-                question: conditionalQuestion.question,
-                text: conditionalQuestion.text,
-                postText: conditionalQuestion.postText,
-                validateOn: conditionalQuestion.validateOn,
-                validations: conditionalQuestion.validations,
-                value: _this.props.questionAnswers[conditionalQuestion.questionId],
-                input: conditionalQuestion.input,
-                classes: _this.props.classes,
-                renderError: _this.props.renderError,
-                questionAnswers: _this.props.questionAnswers,
-                validationErrors: _this.props.validationErrors,
-                onAnswerChange: _this.props.onAnswerChange,
-                onQuestionBlur: _this.props.onQuestionBlur,
-                onKeyDown: _this.props.onKeyDown }));
-            }
+
+            conditionalItems.push(React.createElement(Question, { key: conditionalQuestion.questionId,
+              questionSetId: _this.props.questionSetId,
+              questionId: conditionalQuestion.questionId,
+              question: conditionalQuestion.question,
+              text: conditionalQuestion.text,
+              postText: conditionalQuestion.postText,
+              validateOn: conditionalQuestion.validateOn,
+              validations: conditionalQuestion.validations,
+              value: _this.props.questionAnswers[conditionalQuestion.questionId],
+              input: conditionalQuestion.input,
+              classes: _this.props.classes,
+              renderError: _this.props.renderError,
+              questionAnswers: _this.props.questionAnswers,
+              validationErrors: _this.props.validationErrors,
+              onAnswerChange: _this.props.onAnswerChange,
+              onQuestionBlur: _this.props.onQuestionBlur,
+              onKeyDown: _this.props.onKeyDown }));
           })();
         });
       }
