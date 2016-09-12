@@ -198,7 +198,6 @@ class Winterfell extends React.Component {
             onPanelBack={this.handleBackButtonClick.bind(this)}
             onSwitchPanel={this.handleSwitchPanel.bind(this)}
             onSubmit={this.handleSubmit.bind(this)}
-            onSubmit={this.handleSubmit.bind(this)}
             onValidatePanel={this.handleValidatePanel.bind(this)}
             isValid={isValid}
           />
