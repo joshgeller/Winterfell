@@ -130,6 +130,14 @@ var QuestionPanel = (function (_React$Component) {
 
           this.setState({
             validationErrors: validationErrors
+          }, function () {
+            if (Object.keys(invalidQuestions).length > 0) {
+              // Scroll to first error
+              var e = document.getElementsByClassName('builder-field-error-message');
+              if (e.length && e[0].scrollIntoView) {
+                e[0].scrollIntoView();
+              }
+            }
           });
         }
       }
