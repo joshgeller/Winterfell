@@ -333,7 +333,6 @@ QuestionPanel.defaultProps = {
   onAnswerChange: function onAnswerChange() {},
   onSwitchPanel: function onSwitchPanel() {},
   onPanelBack: function onPanelBack() {},
-  onPanelBack: function onPanelBack() {},
   onValidatePanel: function onValidatePanel() {},
   panelHistory: []
 };

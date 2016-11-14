@@ -328,7 +328,6 @@ QuestionPanel.defaultProps = {
   onAnswerChange         : () => {},
   onSwitchPanel          : () => {},
   onPanelBack            : () => {},
-  onPanelBack            : () => {},
   onValidatePanel        : () => {},
   panelHistory           : [],
 };
