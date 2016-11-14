@@ -133,7 +133,7 @@ var QuestionPanel = (function (_React$Component) {
           }, function () {
             if (Object.keys(invalidQuestions).length > 0) {
               // Scroll to first error
-              var e = document.getElementsByClassName('builder-field-error-message');
+              var e = window.$('.builder-field-error-message');
               if (e.length && e[0].scrollIntoView) {
                 e[0].scrollIntoView();
               }
@@ -218,7 +218,8 @@ var QuestionPanel = (function (_React$Component) {
     value: function handleInputKeyDown(e) {
       if (KeyCodez[e.keyCode] === 'enter') {
         e.preventDefault();
-        this.handleMainButtonClick.call(this);
+        // Don't do anything when we hit ENTER
+        // this.handleMainButtonClick.call(this);
       }
     }
   }, {

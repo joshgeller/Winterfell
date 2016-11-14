@@ -54,7 +54,8 @@ var RadioOptionsInput = (function (_React$Component) {
                 className: _this.props.classes.radio,
                 required: _this.props.required ? 'required' : undefined,
                 onChange: _this.handleChange.bind(_this, opt.value),
-                onBlur: _this.props.onBlur.bind(null, _this.state.value) }),
+                onBlur: _this.props.onBlur.bind(null, _this.state.value),
+                onKeyDown: _this.props.onKeyDown }),
               opt.text
             )
           );

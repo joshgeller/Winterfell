@@ -21,19 +21,20 @@ class RadioOptionsInput extends React.Component {
       <ul className={this.props.classes.radioList}>
         {this.props.options.map(opt =>
           <li key={opt.value}
-              className={this.props.classes.radioListItem}>
+            className={this.props.classes.radioListItem}>
             <label className={this.props.classes.radioLabel}
-                   id={this.props.labelId}>
+              id={this.props.labelId}>
               <input type="radio"
-                     name={this.props.name}
-                     aria-labelledby={this.props.labelId}
-                     checked={this.state.value == opt.value}
-                     className={this.props.classes.radio}
-                     required={this.props.required
-                                 ? 'required'
-                                 : undefined}
-                     onChange={this.handleChange.bind(this, opt.value)}
-                     onBlur={this.props.onBlur.bind(null, this.state.value)} />
+                name={this.props.name}
+                aria-labelledby={this.props.labelId}
+                checked={this.state.value == opt.value}
+                className={this.props.classes.radio}
+                required={this.props.required
+                  ? 'required'
+                : undefined}
+                onChange={this.handleChange.bind(this, opt.value)}
+                onBlur={this.props.onBlur.bind(null, this.state.value)}
+                onKeyDown={this.props.onKeyDown} />
               {opt.text}
             </label>
           </li>
